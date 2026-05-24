@@ -1,0 +1,8 @@
+#pragma once
+
+typedef struct TcpConnectionRecord
+{
+    int m_fdConnection;
+    char m_ip[16];
+    int m_port;
+} TcpConnectionRecord;

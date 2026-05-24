@@ -1,0 +1,31 @@
+#pragma once
+#include <stdint.h>
+#include "TcpConnectionRecord.h"
+
+typedef struct TcpServerController TcpServerController;
+
+typedef enum TcpResult 
+{
+    TCP_RESULT_SUCCESS = 0,
+    TCP_RESULT_NULL_PTR,
+    TCP_RESULT_ALLOCATION_FAILED,
+    TCP_RESULT_SOCKET_ERROR,
+    TCP_RESULT_BIND_ERROR,
+    TCP_RESULT_LISTEN_ERROR,
+    TCP_RESULT_ACCEPT_ERROR,
+    TCP_RESULT_CONNECTION_CLOSED,
+    TCP_RESULT_THREAD_CREATION_FAILED
+} TcpResult;
+
+TcpServerController* TcpServerController_Create(const char* a_name, const char* a_ip, const uint16_t a_port);
+void TcpServerController_Destroy(TcpServerController** a_controller);
+
+TcpResult TcpServerController_Start(TcpServerController* a_controller);
+void TcpServerController_Stop(TcpServerController* a_controller);
+
+TcpResult TcpServerController_ProcessConnection(TcpServerController* a_controller, TcpConnectionRecord* a_record);
+
+// Getters
+uint16_t TcpServerController_GetPort(TcpServerController* a_controller);
+uint32_t TcpServerController_GetIp(TcpServerController* a_controller);
+
