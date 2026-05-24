@@ -27,6 +27,8 @@ void TcpServerController_Stop(TcpServerController* a_controller);
 
 TcpResult TcpServerController_ProcessConnection(TcpServerController* a_controller, TcpConnectionRecord* a_record);
 
+TcpResult TcpServerController_Display(TcpServerController* a_ctrl);
+
 TcpResult TcpServerController_SetCallbacks(TcpServerController* a_controller, 
     void (*a_callbackNewConnection)(const TcpConnectionRecord* a_record), 
     void (*a_callbackDisconnect)(const TcpConnectionRecord* a_record), 

@@ -7,6 +7,7 @@ TcpConnectionAcceptor.c \
 TcpServerDb.c \
 TcpConnectionHandler.c \
 test_app.c \
+TcpConnectionRecord.c \
 network_utils.c
 
 OBJS = $(patsubst %.c, build/%.o, $(SRCS))

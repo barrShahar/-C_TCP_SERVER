@@ -25,6 +25,7 @@ int main(void)
     // wait for user to press enter
     getchar();
 
+    TcpServerController_Display(tcp_server);
     return 0;
 }
 

@@ -114,7 +114,7 @@ TcpResult TcpConnectionAcceptor_Start(TcpConnectionAcceptor* a_acceptor)
     {
         return TCP_RESULT_SUCCESS;
     }
-    
+
     int err = pthread_create(&a_acceptor->m_thread, NULL, TcpConnectionAcceptor_AcceptLoop, a_acceptor);
     if (err != 0)
     {

@@ -1,5 +1,7 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "TcpServerDb.h"
+#include "TcpConnectionRecord.h"
 
 struct TcpServerDb
 {
@@ -49,4 +51,29 @@ TcpServerDb_AddClient(TcpServerDb* a_db, TcpConnectionRecord* a_record)
 static TcpResult ListItrToTcpResult(ListItr a_itr)
 {
     return (a_itr != NULL) ? TCP_RESULT_SUCCESS : TCP_RESULT_ALLOCATION_FAILED;
+}
+
+static int TcpServerDB_DisplayRecord(void* a_record, void* a_context)
+{
+    (void)a_context;
+    TcpConnectionRecord_Display((TcpConnectionRecord*)a_record);
+    printf("\n");
+    return 1; // success
+}
+
+TcpResult TcpServerDB_Display(TcpServerDb* a_serverDB)
+{
+    if (a_serverDB == NULL)
+    {
+        return TCP_RESULT_NULL_PTR;
+    }
+
+    ListItrForEach(
+        ListItrBegin(a_serverDB->m_dataBase),
+        ListItrEnd(a_serverDB->m_dataBase),
+        TcpServerDB_DisplayRecord,
+        NULL
+    );
+
+    return TCP_RESULT_SUCCESS;
 }

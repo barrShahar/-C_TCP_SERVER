@@ -16,7 +16,6 @@ char *network_convert_ip_n_to_p(uint32_t a_ip_addr, char a_output_buffer[INET_AD
 
     assert(a_output_buffer != NULL);
 
-    a_ip_addr = htonl(a_ip_addr);
     if (inet_ntop(AF_INET, &a_ip_addr, a_output_buffer, INET_ADDRSTRLEN) == NULL)
     {
         a_output_buffer[0] = '\0';

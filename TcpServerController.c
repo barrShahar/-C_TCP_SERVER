@@ -64,7 +64,21 @@ TcpServerController_Create(const char* a_name, const char* a_ip, const uint16_t 
     return controller;
 }
 
-void TcpServerController_Destroy(TcpServerController** a_ctrl)
+TcpResult 
+TcpServerController_Display(TcpServerController* a_ctrl)
+{
+    if (a_ctrl == NULL)
+    {
+        return TCP_RESULT_NULL_PTR;
+    }
+
+    TcpServerDB_Display(a_ctrl->m_serverDb);
+
+    return TCP_RESULT_SUCCESS;
+}
+
+void 
+TcpServerController_Destroy(TcpServerController** a_ctrl)
 {
     if (a_ctrl == NULL || *a_ctrl == NULL)
     {

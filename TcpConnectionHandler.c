@@ -16,7 +16,7 @@ struct TcpConnectionHandler
     // fd_set m_readfds; //set of socket descriptors
 };
 //static helper functions declarations
-static void* ClientHandlerThread(void* a_handler);
+static void* ClientHandlerAcceptLoop(void* a_handler);
 
 
 TcpConnectionHandler* TcpConnectionHandler_Create(TcpServerController* a_tcpCtrl)
@@ -54,7 +54,7 @@ TcpResult TcpConnectionHandler_Start(TcpConnectionHandler* a_handler)
         return TCP_RESULT_SUCCESS;
     }
 
-    int result = pthread_create(&a_handler->m_thread, NULL, ClientHandlerThread, a_handler);
+    int result = pthread_create(&a_handler->m_thread, NULL, ClientHandlerAcceptLoop, a_handler);
     if (result > 0) // Any value greater than 0 indicates a POSIX error code
     {
         return TCP_RESULT_THREAD_CREATION_FAILED;
@@ -62,10 +62,10 @@ TcpResult TcpConnectionHandler_Start(TcpConnectionHandler* a_handler)
     return TCP_RESULT_SUCCESS;
 }
 
-static void* ClientHandlerThread(void* a_handler)
+static void* ClientHandlerAcceptLoop(void* a_handler)
 {
-    TcpConnectionHandler* handler = (TcpConnectionHandler*)a_handler;
-    int max_fd = 0;
+    TcpConnectionHandler* handler = (TcpConnectionHandler*)a_handler; // Alias
 
+    
     return NULL;
 }

@@ -6,3 +6,5 @@ typedef struct TcpConnectionRecord
     char m_ip[16];
     int m_port;
 } TcpConnectionRecord;
+
+void TcpConnectionRecord_Display(TcpConnectionRecord* a_record);
