@@ -17,6 +17,8 @@ int main(void)
     TcpServerController *tcp_server = TcpServerController_Create
     ("test_server", SERVER_IP, SERVER_PORT);
 
+    TcpServerController_SetCallbacks(tcp_server, CallbackNewConnection, CallbackDisconnect, CallbackMessageReceived);
+
     TcpServerController_Start(tcp_server);
 
 

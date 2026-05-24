@@ -5,16 +5,19 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
+#define DEFAULT_SERVER_IP "127.0.0.1"
+#define DEFAULT_SERVER_PORT 8080
+
 int main(int argc, char **argv)
 {
-    if (argc != 3)
+    char *server_ip = DEFAULT_SERVER_IP;
+    uint16_t server_port = DEFAULT_SERVER_PORT;
+    if (argc == 3)
     {
-        printf("Usage: %s <server ip> <server port>\n", argv[0]);
-        return 1;
+        server_ip = argv[1];
+        server_port = atoi(argv[2]);
     }
-    
-    char *server_ip = argv[1];
-    uint16_t server_port = atoi(argv[2]);
+
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)

@@ -25,6 +25,11 @@ struct TcpServerController
     ServerState m_state;
     uint32_t m_ip;
     uint16_t m_port;
+
+    // Callbacks
+    void (*m_callbackNewConnection)(const TcpConnectionRecord* a_record);
+    void (*m_callbackDisconnect)(const TcpConnectionRecord* a_record);
+    void (*m_callbackMessageReceived)(const TcpConnectionRecord* a_record, const char* a_message, size_t a_length);
 };
 
 TcpServerController* 
@@ -110,12 +115,34 @@ TcpResult
 TcpServerController_ProcessConnection(TcpServerController* a_controller, TcpConnectionRecord* a_record)
 {
     TcpResult resultDB = TcpServerDb_AddClient(a_controller->m_serverDb, a_record);
-    if (resultDB == TCP_RESULT_SUCCESS)
+    printf("TcpServerController_ProcessConnection: resultDB = %d\n", resultDB);
+    if (resultDB != TCP_RESULT_SUCCESS)
     {
-        printf("TcpServerController_ProcessConnection: %s\n", a_record->m_ip);
         return resultDB;
     }
-    TcpResult resultHandler = TcpConnectionHandler_NotifyNewConnection(a_record);
+
+    printf("TcpServerController_ProcessConnection: %s\n", a_record->m_ip);
+    if (a_controller->m_callbackNewConnection)
+    {
+        a_controller->m_callbackNewConnection(a_record);
+    }
+    return TCP_RESULT_SUCCESS;
+}
+
+TcpResult 
+TcpServerController_SetCallbacks(TcpServerController* a_controller, 
+    void (*a_callbackNewConnection)(const TcpConnectionRecord* a_record), 
+    void (*a_callbackDisconnect)(const TcpConnectionRecord* a_record), 
+    void (*a_callbackMessageReceived)(const TcpConnectionRecord* a_record, const char* a_message, size_t a_length))
+{
+    if (a_controller == NULL)
+    {
+        return TCP_RESULT_NULL_PTR;
+    }
+    a_controller->m_callbackNewConnection = a_callbackNewConnection;
+    a_controller->m_callbackDisconnect = a_callbackDisconnect;
+    a_controller->m_callbackMessageReceived = a_callbackMessageReceived;
+    return TCP_RESULT_SUCCESS;
 }
 
 uint16_t TcpServerController_GetPort(TcpServerController* a_controller)
