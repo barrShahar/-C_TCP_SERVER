@@ -3,10 +3,16 @@
 #include "TcpConnectionHandler.h"
 #include "db/gen_dlist.h"
 
+typedef enum {
+    HANDLER_STATE_STOPPED,
+    HANDLER_STATE_RUNNING
+} HandlerState;
+
 struct TcpConnectionHandler
 {
     TcpServerController* m_tcpCtrl;
     pthread_t m_thread;
+    HandlerState m_state;
     // fd_set m_readfds; //set of socket descriptors
 };
 //static helper functions declarations
@@ -21,6 +27,7 @@ TcpConnectionHandler* TcpConnectionHandler_Create(TcpServerController* a_tcpCtrl
         return NULL;
     }
     handler->m_tcpCtrl = a_tcpCtrl;
+    handler->m_state = HANDLER_STATE_STOPPED;
 
     // FD_ZERO(&handler->m_readfds);
     return handler;
@@ -40,6 +47,11 @@ TcpResult TcpConnectionHandler_Start(TcpConnectionHandler* a_handler)
     if (a_handler == NULL)
     {
         return TCP_RESULT_NULL_PTR;
+    }
+
+    if (a_handler->m_state == HANDLER_STATE_RUNNING)
+    {
+        return TCP_RESULT_SUCCESS;
     }
 
     int result = pthread_create(&a_handler->m_thread, NULL, ClientHandlerThread, a_handler);

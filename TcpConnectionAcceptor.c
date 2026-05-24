@@ -12,13 +12,21 @@
 #include "network_utils.h"
 #include "TcpConnectionRecord.h"
 
-static void* TcpConnectionAcceptor_AcceptLoop(void* a_acceptor);
+typedef enum {
+    ACCEPTOR_STATE_STOPPED,
+    ACCEPTOR_STATE_RUNNING
+} AcceptorState;
+
 struct TcpConnectionAcceptor
 {
     TcpServerController* m_tcpCtrl;
     pthread_t m_thread;
     int m_listenFd;
+    AcceptorState m_state;
 };
+// statics functions declarations
+static void* TcpConnectionAcceptor_AcceptLoop(void* a_acceptor);
+
 
 TcpConnectionAcceptor* TcpConnectionAcceptor_Create(TcpServerController* a_tcpCtrl)
 {
@@ -30,8 +38,9 @@ TcpConnectionAcceptor* TcpConnectionAcceptor_Create(TcpServerController* a_tcpCt
         return NULL;
     }
     
-    acceptor->m_tcpCtrl   = a_tcpCtrl;
-    acceptor->m_thread    = 0;
+    acceptor->m_tcpCtrl = a_tcpCtrl;
+    acceptor->m_thread = 0;
+    acceptor->m_state = ACCEPTOR_STATE_STOPPED;
 
     // 1. Create the socket
     acceptor->m_listenFd = socket(AF_INET, SOCK_STREAM, 0);
@@ -96,13 +105,23 @@ void TcpConnectionAcceptor_Destroy(TcpConnectionAcceptor** a_acceptor)
 
 TcpResult TcpConnectionAcceptor_Start(TcpConnectionAcceptor* a_acceptor)
   {
-      int err = pthread_create(&a_acceptor->m_thread, NULL, TcpConnectionAcceptor_AcceptLoop, a_acceptor);
-      if (err != 0)
-      {
-          return TCP_RESULT_THREAD_CREATION_FAILED;
-      }
 
-      return TCP_RESULT_SUCCESS;
+    if (a_acceptor == NULL) 
+    { 
+        return TCP_RESULT_NULL_PTR; 
+    }
+    if (a_acceptor->m_state == ACCEPTOR_STATE_RUNNING)
+    {
+        return TCP_RESULT_SUCCESS;
+    }
+    
+    int err = pthread_create(&a_acceptor->m_thread, NULL, TcpConnectionAcceptor_AcceptLoop, a_acceptor);
+    if (err != 0)
+    {
+        return TCP_RESULT_THREAD_CREATION_FAILED;
+    }
+
+    return TCP_RESULT_SUCCESS;
   }
 
 static void* TcpConnectionAcceptor_AcceptLoop(void* a_acceptor)
