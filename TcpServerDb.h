@@ -11,3 +11,5 @@ void TcpServerDb_Destroy(TcpServerDb** a_dbManager);
 TcpResult TcpServerDb_AddClient(TcpServerDb* a_serverDB, TcpConnectionRecord* a_record);
 
 TcpResult TcpServerDB_Display(TcpServerDb* a_serverDB);
+
+int TcpServerDB_Delete(TcpServerDb* a_serverDB, const TcpConnectionRecord* a_record);

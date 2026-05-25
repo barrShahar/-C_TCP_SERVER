@@ -159,6 +159,16 @@ size_t ListIsEmpty(List* _list);
  */
 ListItr ListItrForEach(ListItr _begin, ListItr _end, ListActionFunction _action, void* _context);
 
+/**
+ * @brief 
+ * 
+ * @param _list 
+ * @param _toFind 
+ * @param Compare 
+ * @return ListItr 
+ */
+ListItr ListFind(List* _list, const void* _target, int (*Compare)(const void* _target, const void* _currItem));
+
 
 #endif /* __NEW_GEN_DLIST_H__ */
 

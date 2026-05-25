@@ -26,6 +26,8 @@ TcpResult TcpServerController_Start(TcpServerController* a_controller);
 void TcpServerController_Stop(TcpServerController* a_controller);
 
 TcpResult TcpServerController_ProcessConnection(TcpServerController* a_controller, TcpConnectionRecord* a_record);
+TcpResult TcpServerController_ProcessDisconnect(TcpServerController* a_controller, TcpConnectionRecord* a_record);
+TcpResult TcpServerController_ProcessMessage(TcpServerController* a_controller, const TcpConnectionRecord* a_record, const char* a_message, size_t a_length);
 
 TcpResult TcpServerController_Display(TcpServerController* a_ctrl);
 

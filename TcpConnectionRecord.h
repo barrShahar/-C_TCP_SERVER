@@ -8,3 +8,5 @@ typedef struct TcpConnectionRecord
 } TcpConnectionRecord;
 
 void TcpConnectionRecord_Display(TcpConnectionRecord* a_record);
+
+void TcpConnectionRecord_Destroy(TcpConnectionRecord** a_record);

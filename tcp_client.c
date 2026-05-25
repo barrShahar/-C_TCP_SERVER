@@ -4,6 +4,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <string.h>
 
 #define DEFAULT_SERVER_IP "127.0.0.1"
 #define DEFAULT_SERVER_PORT 8080
@@ -38,6 +39,23 @@ int main(int argc, char **argv)
     }
 
     printf("Client: Connected to server\n");
+
+    char buf[256];
+    while (1)
+    {
+        printf("Enter message (or 'quit' to exit): ");
+        if (fgets(buf, sizeof(buf), stdin) == NULL)
+            break;
+
+        if (strncmp(buf, "quit", 4) == 0)
+            break;
+
+        if (send(sockfd, buf, strlen(buf), 0) < 0)
+        {
+            printf("Error: send failed\n");
+            break;
+        }
+    }
 
     close(sockfd);
     return 0;

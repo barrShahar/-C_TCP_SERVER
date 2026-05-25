@@ -13,17 +13,21 @@ network_utils.c
 OBJS = $(patsubst %.c, build/%.o, $(SRCS))
 TARGET = test_app
 TCP_CLIENT_TARGET = tcp_client
+TCP_CLIENT_MULTI_TARGET = multi_client
 
 TEST_DIR = tests
 TEST_SRCS = $(TEST_DIR)/test_network_utils.c network_utils.c
 TEST_BIN  = build/test_network_utils
 
-all: $(TARGET) $(TCP_CLIENT_TARGET)
+all: $(TARGET) $(TCP_CLIENT_TARGET) $(TCP_CLIENT_MULTI_TARGET)
 
 $(TARGET): $(OBJS)
 	$(CC) $(FLAGS) -o $@ $^ $(LDFLAGS)
 
 $(TCP_CLIENT_TARGET): tcp_client.c
+	$(CC) $(FLAGS) -o $@ $^
+
+$(TCP_CLIENT_MULTI_TARGET): multi_client.c
 	$(CC) $(FLAGS) -o $@ $^
 
 build/%.o: %.c | build

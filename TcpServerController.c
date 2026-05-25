@@ -135,11 +135,51 @@ TcpServerController_ProcessConnection(TcpServerController* a_controller, TcpConn
         return resultDB;
     }
 
-    printf("TcpServerController_ProcessConnection: %s\n", a_record->m_ip);
+    TcpResult resultHandlerDb =
+        TcpConnectionHandler_AddConnection(a_controller->m_connectionHandler, a_record);
+
+    if (resultHandlerDb != TCP_RESULT_SUCCESS)
+    {
+        // Delete record
+    }
+
+    printf("DEBUG:Controller_ProcessConnection: %s\n", a_record->m_ip);
     if (a_controller->m_callbackNewConnection)
     {
         a_controller->m_callbackNewConnection(a_record);
     }
+    return TCP_RESULT_SUCCESS;
+}
+
+TcpResult
+TcpServerController_ProcessDisconnect(TcpServerController* a_controller, TcpConnectionRecord* a_record)
+{
+    if (a_controller == NULL) { return TCP_RESULT_NULL_PTR; }
+
+    if (a_controller->m_callbackDisconnect)
+    {
+        a_controller->m_callbackDisconnect(a_record);
+    }
+
+    TcpServerDB_Delete(a_controller->m_serverDb, a_record);
+    TcpConnectionRecord_Destroy(&a_record);
+
+    return TCP_RESULT_SUCCESS;
+}
+
+TcpResult
+TcpServerController_ProcessMessage(TcpServerController* a_controller, const TcpConnectionRecord* a_record, const char* a_message, size_t a_length)
+{
+    if (a_controller == NULL)
+    {
+        return TCP_RESULT_NULL_PTR;
+    }
+    if (a_controller->m_callbackMessageReceived)
+    {
+        a_controller->
+            m_callbackMessageReceived(a_record, a_message, a_length);
+    }
+        
     return TCP_RESULT_SUCCESS;
 }
 

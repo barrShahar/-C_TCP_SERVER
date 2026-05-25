@@ -77,3 +77,15 @@ TcpResult TcpServerDB_Display(TcpServerDb* a_serverDB)
 
     return TCP_RESULT_SUCCESS;
 }
+
+int 
+TcpServerDB_Delete(TcpServerDb* a_serverDB, const TcpConnectionRecord* a_record)
+{
+    ListItr it = ListFind(a_serverDB->m_dataBase, a_record, NULL);
+    if (it)
+    {
+        ListItrRemove(it);
+        return 1;
+    }
+    return 0;
+}
